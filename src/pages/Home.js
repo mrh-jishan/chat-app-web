@@ -15,7 +15,7 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
-const Home = () => {
+const Home = ({ history }) => {
 
     const onFinish = (user) => {
         console.log('Success:', user);
@@ -24,6 +24,7 @@ const Home = () => {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+                history.push("/chat");
             }).catch(err => {
                 console.log('err: ', err.response);
             })
@@ -77,9 +78,9 @@ const Home = () => {
                                 </Form.Item>
 
                                 <Form.Item {...tailLayout}>
-                                <Typography.Paragraph>
-                                    Don't you have an account?   <Link to="/register"> Register here</Link>
-                                </Typography.Paragraph>
+                                    <Typography.Paragraph>
+                                        Don't you have an account?   <Link to="/register"> Register here</Link>
+                                    </Typography.Paragraph>
                                 </Form.Item>
 
                                 <Form.Item {...tailLayout}>

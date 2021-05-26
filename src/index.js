@@ -1,4 +1,3 @@
-import actionCable from 'actioncable';
 import 'antd/dist/antd.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -6,15 +5,9 @@ import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-const API_WS_ROOT = 'ws://localhost:3000/cable'
-
-const CableApp = {}
-
-CableApp.cable = actionCable.createConsumer(API_WS_ROOT)
-
 ReactDOM.render(
   <React.StrictMode>
-    <App cableApp={CableApp} />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

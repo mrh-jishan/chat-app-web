@@ -19,7 +19,7 @@ const Register = () => {
     const onFinish = (user) => {
         console.log('Success:', user);
 
-        axios.post(`${API_HOST}/login`, { user })
+        axios.post(`${API_HOST}/signup`, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);

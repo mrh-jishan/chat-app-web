@@ -10,7 +10,7 @@ function App() {
       <Switch>
         <Route exact path="/login" component={Home} />
         <Route exact path="/register" component={Register} />
-        <Route exact path="/chat" component={Chat} />
+        <Route path="/chat" component={Chat} />
         <Redirect to='/login' from='/' />
         <Route path='*' exact={true} component={Home} />
       </Switch>
