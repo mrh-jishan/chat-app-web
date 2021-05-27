@@ -1,5 +1,5 @@
 import actionCable from 'actioncable';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Comment, Form, Input, List } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -70,55 +70,54 @@ const Message = () => {
 
     return (
         <div>
-            <h3>slug: {slug}</h3>
-            {messages.map((message, index) => (
-                <div key={index}>
-                    <Typography.Text>text: {message.content}</Typography.Text>
-                    <hr />
-                </div>
-            ))}
-
-            {/* <List
-                header={<div>Header</div>}
-                footer={<div>Footer</div>}
-                bordered
+            <h3>Chat Room: {slug}</h3>
+            <List
+                className="comment-list"
+                header={`${messages.length} replies`}
+                itemLayout="horizontal"
                 dataSource={messages}
                 renderItem={item => (
-                    <List.Item>
-                        <Typography.Text mark>[ITEM]</Typography.Text> {item.content}
-                    </List.Item>
+                    <li>
+                        <Comment
+                            actions={item.actions}
+                            author={item.user.username}
+                            avatar='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                            content={item.content}
+                            datetime={item.created_at}
+                        />
+                    </li>
                 )}
-            /> */}
+                />
 
             <Form
-                {...layout}
+            {...layout}
                 name="basic"
                 initialValues={{
-                    content: "hi",
-                }}
+                content: "hi",
+            }}
                 onFinish={onFinish}
             >
-                <Form.Item
+            <Form.Item
 
-                    name="content"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your username!',
-                        },
-                    ]}
-                >
-                    <TextArea rows={4} />
-                </Form.Item>
+                name="content"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your message!',
+                    },
+                ]}
+            >
+                <TextArea rows={4} />
+            </Form.Item>
 
 
-                <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
+            <Form.Item {...tailLayout}>
+                <Button type="primary" htmlType="submit">
+                    Submit
         </Button>
-                </Form.Item>
+            </Form.Item>
             </Form>
-        </div>
+        </div >
     );
 }
 

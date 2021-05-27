@@ -1,4 +1,4 @@
-import { Col, Layout, Row, Typography } from 'antd';
+import { Card, Col, Layout, Row, Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
@@ -31,28 +31,32 @@ const Chat = () => {
                     <div className="logo" />
                 </Header>
                 <Content style={{ padding: '0 50px', marginTop: 64 }}>
-                    <Row align='middle'
-                        justify='center'
-                        style={{ minHeight: '300px' }}>
-                        <Col>
+                    <Row align='middle' justify='center' style={{ minHeight: '300px' }}>
+                        <Col span={24}>
                             <Typography.Title>Welcome to Chat App</Typography.Title>
-                            <div>
-                                <h2>Chat Topic</h2>
-                                <ul>
-                                    {rooms.map((room, index) => (
-                                        <li key={index}>
-                                            <Link to={`${url}/${room.slug}`}>{room.topic}</Link>
-                                        </li>
-                                    ))}
-                                </ul>
+                            <Row>
+                                <Col span={24}>  <h2>Chat Topic</h2> </Col>
+                                <Col span={10}>
+                                    <Card>
+                                        <ul>
+                                            {rooms.map((room, index) => (
+                                                <li key={index}>
+                                                    <Link to={`${url}/${room.slug}`}>{room.topic}</Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </Card>
+                                </Col>
 
-                                <Switch>
-                                    <Route exact path={path}>
-                                        <h3>Please select a chat topic.</h3>
-                                    </Route>
-                                    <Route path={`${path}/:slug`} component={Message} />
-                                </Switch>
-                            </div>
+                                <Col span={14}>
+                                    <Card>
+                                        <Switch>
+                                            <Route exact path={path} component={() => <h3>Please select a chat topic.</h3>} />
+                                            <Route path={`${path}/:slug`} component={Message} />
+                                        </Switch>
+                                    </Card>
+                                </Col>
+                            </Row>,
                         </Col>
                     </Row>
                 </Content>
