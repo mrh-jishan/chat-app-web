@@ -26,7 +26,7 @@ const Message = () => {
         const cable = actionCable.createConsumer(WS_HOST);
         cable.subscriptions.create({
             channel: `MessagesChannel`,
-            id: 'messages'
+            chatroom_slug: `messages_${slug}`
         }, {
             connected: () => {
                 console.log("connected!")
@@ -39,7 +39,7 @@ const Message = () => {
                 setMessages(prevArray => [...prevArray, data.message])
             }
         })
-    }, [])
+    }, [slug])
 
     useEffect(() => {
         axios.get(`${API_HOST}/chatrooms/${slug}/messages`)

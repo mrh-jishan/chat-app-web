@@ -17,7 +17,6 @@ const Chat = () => {
         axios.get(`${API_HOST}/chatrooms`)
             .then(res => {
                 const { data } = res.data;
-                console.log('data, ', data);
                 setRooms(data.rooms)
             }).catch(err => {
                 console.log('err: ', err.response);

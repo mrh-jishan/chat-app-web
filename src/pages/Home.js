@@ -18,12 +18,8 @@ const tailLayout = {
 const Home = ({ history }) => {
 
     const onFinish = (user) => {
-        console.log('Success:', user);
-
         axios.post(`${API_HOST}/login`, { user })
             .then(res => {
-                console.log(res);
-                console.log(res.data);
                 history.push("/chat");
             }).catch(err => {
                 console.log('err: ', err.response);
