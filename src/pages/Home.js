@@ -40,7 +40,7 @@ const Home = ({ history }) => {
                     <Row align='middle'
                         justify='center'
                         style={{ minHeight: '300px' }}>
-                        <Col span={18}>
+                        <Col span={10}>
                             <Typography.Title>Welcome to Chat App</Typography.Title>
                             <Form
                                 {...layout}

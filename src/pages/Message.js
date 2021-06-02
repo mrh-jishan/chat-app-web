@@ -16,8 +16,10 @@ const tailLayout = {
 };
 
 
+
 const Message = () => {
     const { slug } = useParams();
+    const [form] = Form.useForm();
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
@@ -40,7 +42,7 @@ const Message = () => {
     }, [])
 
     useEffect(() => {
-        axios.get(`${API_HOST}/messages`)
+        axios.get(`${API_HOST}/chatrooms/${slug}/messages`)
             .then(res => {
                 const { data } = res.data;
                 console.log('messages-------, ', data);
@@ -52,16 +54,16 @@ const Message = () => {
 
     const onFinish = (values) => {
         console.log('Success:', values);
-        axios.post(`${API_HOST}/messages`, {
+        axios.post(`${API_HOST}/chatrooms/${slug}/messages`, {
             "message": {
                 "content": values.content,
-                "chatroom_id": 1,
                 "user_id": 2
             }
         })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+                form.resetFields();
             }).catch(err => {
                 console.log('err: ', err.response);
             })
@@ -87,35 +89,29 @@ const Message = () => {
                         />
                     </li>
                 )}
-                />
+            />
 
             <Form
-            {...layout}
+                {...layout}
                 name="basic"
-                initialValues={{
-                content: "hi",
-            }}
                 onFinish={onFinish}
+                form={form}
             >
-            <Form.Item
+                <Form.Item
+                    name="content"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your message!',
+                        },
+                    ]}
+                >
+                    <TextArea rows={4} />
+                </Form.Item>
 
-                name="content"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input your message!',
-                    },
-                ]}
-            >
-                <TextArea rows={4} />
-            </Form.Item>
-
-
-            <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-        </Button>
-            </Form.Item>
+                <Form.Item {...tailLayout}>
+                    <Button type="primary" htmlType="submit"> Submit </Button>
+                </Form.Item>
             </Form>
         </div >
     );
