@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ master ]
     
-env:
-  REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
-  REACT_APP_WS_HOST: ${{ secrets.REACT_APP_WS_HOST }}
-
 jobs:
   build:
 
@@ -40,6 +36,9 @@ jobs:
 
     - name: Build
       run: npm run build
+      env:
+        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+        REACT_APP_WS_HOST: ${{ secrets.REACT_APP_WS_HOST }}
 
     - name: Deploy
       run: |
@@ -52,3 +51,5 @@ jobs:
         user_email: 'github-actions[bot]@users.noreply.github.com'
         github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
         repository: ${{ github.repository }}
+        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+        REACT_APP_WS_HOST: ${{ secrets.REACT_APP_WS_HOST }}
