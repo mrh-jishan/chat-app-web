@@ -2,13 +2,24 @@ import { Button, Card, Col, Form, Layout, notification, Row, Typography } from '
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
-import Topic from '../components/Topic';
-import { API_HOST } from '../constant';
-import Message from './Message';
+import { useInjectReducer, useInjectSaga } from 'redux-injectors';
+import Topic from '../../components/Topic';
+import { API_HOST } from '../../constant';
+import Message from '../Message';
+import reducer from './reducer';
+import saga from './saga';
 
 const { Header, Content } = Layout;
 
-const Chat = ({ history }) => {
+const key = 'chat';
+
+const Chat = () => {
+
+    useInjectReducer({ key, reducer });
+    useInjectSaga({ key, saga });
+
+    // const dispatch = useDispatch();
+    // const onLogin = (user) => dispatch(loginAction(user));
 
     const { path, url } = useRouteMatch();
     const [rooms, setRooms] = useState([]);

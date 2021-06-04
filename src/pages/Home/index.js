@@ -1,8 +1,11 @@
 import { Button, Col, Form, Input, Layout, Row, Typography } from 'antd';
-import axios from 'axios';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
-import { API_HOST } from '../constant';
+import { useInjectReducer, useInjectSaga } from 'redux-injectors';
+import { loginAction } from './actions';
+import reducer from './reducer';
+import saga from './saga';
 
 const { Header, Content } = Layout;
 
@@ -10,23 +13,20 @@ const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
 };
+
 const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
-const Register = () => {
+const key = 'auth';
 
-    const onFinish = (user) => {
-        console.log('Success:', user);
+const Home = () => {
 
-        axios.post(`${API_HOST}/signup`, { user })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            }).catch(err => {
-                console.log('err: ', err.response);
-            })
-    };
+    useInjectReducer({ key, reducer });
+    useInjectSaga({ key, saga });
+
+    const dispatch = useDispatch();
+    const onLogin = (user) => dispatch(loginAction(user));
 
     return (
         <>
@@ -38,45 +38,16 @@ const Register = () => {
                     <Row align='middle'
                         justify='center'
                         style={{ minHeight: '300px' }}>
-                        <Col span={18}>
+                        <Col span={10}>
                             <Typography.Title>Welcome to Chat App</Typography.Title>
                             <Form
                                 {...layout}
-                                name="basic"
                                 initialValues={{
                                     username: 'test',
-                                    password: 'test',
-                                    first_name: 'hi',
-                                    last_name: 'there'
+                                    password: 'test'
                                 }}
-                                onFinish={onFinish}
+                                onFinish={onLogin}
                             >
-                                <Form.Item
-                                    label="First Name"
-                                    name="first_name"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please input your first name!',
-                                        },
-                                    ]}
-                                >
-                                    <Input />
-                                </Form.Item>
-
-                                <Form.Item
-                                    label="Last Name"
-                                    name="last_name"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please input your last name!',
-                                        },
-                                    ]}
-                                >
-                                    <Input />
-                                </Form.Item>
-
                                 <Form.Item
                                     label="Username"
                                     name="username"
@@ -105,12 +76,12 @@ const Register = () => {
 
                                 <Form.Item {...tailLayout}>
                                     <Typography.Paragraph>
-                                        Already have an account?   <Link to="/"> Login here</Link>
+                                        Don't you have an account? <Link to="/register"> Register here</Link>
                                     </Typography.Paragraph>
                                 </Form.Item>
 
                                 <Form.Item {...tailLayout}>
-                                    <Button type="primary" htmlType="submit">Register</Button>
+                                    <Button type="primary" htmlType="submit">Login</Button>
                                 </Form.Item>
                             </Form>
                         </Col>
@@ -121,4 +92,4 @@ const Register = () => {
     )
 }
 
-export default Register;
+export default Home;
