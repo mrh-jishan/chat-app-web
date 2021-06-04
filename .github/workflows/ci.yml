@@ -5,6 +5,10 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+    
+env:
+  REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+  REACT_APP_WS_HOST: ${{ secrets.REACT_APP_WS_HOST }}
 
 jobs:
   build:
@@ -33,12 +37,6 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-
-    - name: Run the tests and generate coverage report
-      run: npm test -- --coverage
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
 
     - name: Build
       run: npm run build
