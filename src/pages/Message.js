@@ -15,8 +15,6 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
-
-
 const Message = () => {
     const { slug } = useParams();
     const [form] = Form.useForm();

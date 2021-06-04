@@ -1,17 +1,19 @@
-import { Card, Col, Layout, Row, Typography } from 'antd';
+import { Button, Card, Col, Form, Layout, notification, Row, Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import Topic from '../components/Topic';
 import { API_HOST } from '../constant';
 import Message from './Message';
 
 const { Header, Content } = Layout;
 
-const Chat = () => {
+const Chat = ({ history }) => {
 
     const { path, url } = useRouteMatch();
-
     const [rooms, setRooms] = useState([]);
+    const [form] = Form.useForm();
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         axios.get(`${API_HOST}/chatrooms`)
@@ -23,6 +25,32 @@ const Chat = () => {
             })
     }, [])
 
+    const handleOk = (topic) => {
+        axios.post(`${API_HOST}/chatrooms`, { chatroom: topic })
+            .then(res => {
+                setRooms(prev => [...prev, res.data.data.chatroom])
+                setIsModalVisible(false);
+                form.resetFields();
+                notification.info({
+                    description: 'Success!',
+                    placement: 'bottomRight',
+                });
+            }).catch(err => {
+                notification.error({
+                    message: err.response.data.message,
+                    placement: 'bottomRight'
+                })
+            })
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
     return (
         <>
             <Layout>
@@ -33,11 +61,28 @@ const Chat = () => {
                     <Row align='middle' justify='center' style={{ minHeight: '300px' }}>
                         <Col span={24}>
                             <Typography.Title>Welcome to Chat App</Typography.Title>
-                            <Row>
-                                <Col span={24}>  <h2>Chat Topic</h2> </Col>
+                            <Row
+                                gutter={[16, 16]}
+                                align='middle'
+                                justify='center'>
+
+                                <Col span={24}>
+                                    <h2>Chat Topic</h2>
+                                    <Button type="primary" onClick={showModal}>
+                                        Create Topic
+                                    </Button>
+                                    <Topic
+                                        form={form}
+                                        isModalVisible={isModalVisible}
+                                        handleOk={handleOk}
+                                        handleCancel={handleCancel} />
+                                </Col>
                                 <Col span={10}>
                                     <Card>
                                         <ul>
+                                            {rooms.length <= 0 && (
+                                                <h3> No topic found </h3>
+                                            )}
                                             {rooms.map((room, index) => (
                                                 <li key={index}>
                                                     <Link to={`${url}/${room.slug}`}>{room.topic}</Link>
