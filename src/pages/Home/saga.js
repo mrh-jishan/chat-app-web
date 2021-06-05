@@ -6,11 +6,10 @@ import { makeSelectBody } from './selectors';
 
 export function* login() {
   const user = yield select(makeSelectBody());
-  console.log('user on saga: ', user);
   try {
     const { data, success } = yield call(onLogin, user);
-    console.log('res login: ', data);
     if (success) {
+      localStorage.setItem('token', data.token);
       yield put(loginSuccessAction(data.user, data.token));
       yield put(push('/chat'));
     }

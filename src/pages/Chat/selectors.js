@@ -1,17 +1,28 @@
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
-const authState = state => state.auth || initialState
+const chatroomState = state => state.chatroom || initialState
 
-const makeSelectBody = () =>
-  createSelector(authState, (substate) => substate.body);
+const makeSelectRooms = () =>
+  createSelector(chatroomState, (substate) => substate.rooms);
 
-// const makeSelectPassword = () =>
-//   createSelector(selectLoginPageDomain, (substate) => substate.password);
+const makeSelectError = () =>
+  createSelector(chatroomState, (substate) => substate.error);
 
+const makeSelectModalOpen = () =>
+  createSelector(chatroomState, (substate) => substate.modalOpen);
+
+  const makeSelectMessage = () =>
+  createSelector(chatroomState, (substate) => substate.message);
+
+const makeSelectTopic = () =>
+  createSelector(chatroomState, (substate) => substate.topic);
 
 export {
-  authState,
-  makeSelectBody,
-  // makeSelectPassword,
+  chatroomState,
+  makeSelectRooms,
+  makeSelectError,
+  makeSelectModalOpen,
+  makeSelectTopic,
+  makeSelectMessage,
 };

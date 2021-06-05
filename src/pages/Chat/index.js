@@ -1,66 +1,37 @@
-import { Button, Card, Col, Form, Layout, notification, Row, Typography } from 'antd';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Form, Layout, Row, Typography } from 'antd';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
+import { createStructuredSelector } from 'reselect';
 import Topic from '../../components/Topic';
-import { API_HOST } from '../../constant';
 import Message from '../Message';
+import { chatroomAction, chatroomCreateAction, closeModalAction, opneModalAction } from './actions';
 import reducer from './reducer';
 import saga from './saga';
+import { makeSelectModalOpen, makeSelectRooms } from './selectors';
 
 const { Header, Content } = Layout;
 
-const key = 'chat';
+const key = 'chatroom';
 
 const Chat = () => {
 
     useInjectReducer({ key, reducer });
     useInjectSaga({ key, saga });
 
-    // const dispatch = useDispatch();
-    // const onLogin = (user) => dispatch(loginAction(user));
-
+    const dispatch = useDispatch();
+    const stateSelector = createStructuredSelector({
+        rooms: makeSelectRooms(),
+        isModalVisible: makeSelectModalOpen(),
+    });
+    const { rooms, isModalVisible } = useSelector(stateSelector);
     const { path, url } = useRouteMatch();
-    const [rooms, setRooms] = useState([]);
     const [form] = Form.useForm();
-    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
-        axios.get(`${API_HOST}/chatrooms`)
-            .then(res => {
-                const { data } = res.data;
-                setRooms(data.rooms)
-            }).catch(err => {
-                console.log('err: ', err.response);
-            })
-    }, [])
-
-    const handleOk = (topic) => {
-        axios.post(`${API_HOST}/chatrooms`, { chatroom: topic })
-            .then(res => {
-                setRooms(prev => [...prev, res.data.data.chatroom])
-                setIsModalVisible(false);
-                form.resetFields();
-                notification.info({
-                    description: 'Success!',
-                    placement: 'bottomRight',
-                });
-            }).catch(err => {
-                notification.error({
-                    message: err.response.data.message,
-                    placement: 'bottomRight'
-                })
-            })
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
+        dispatch(chatroomAction());
+    }, [dispatch])
 
     return (
         <>
@@ -79,14 +50,16 @@ const Chat = () => {
 
                                 <Col span={24}>
                                     <h2>Chat Topic</h2>
-                                    <Button type="primary" onClick={showModal}>
+                                    <Button
+                                        type="primary"
+                                        onClick={() => dispatch(opneModalAction())}>
                                         Create Topic
                                     </Button>
                                     <Topic
                                         form={form}
                                         isModalVisible={isModalVisible}
-                                        handleOk={handleOk}
-                                        handleCancel={handleCancel} />
+                                        handleOk={(topic) => dispatch(chatroomCreateAction(topic))}
+                                        handleCancel={() => dispatch(closeModalAction())} />
                                 </Col>
                                 <Col span={10}>
                                     <Card>
