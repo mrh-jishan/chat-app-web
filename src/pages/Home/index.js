@@ -24,9 +24,7 @@ const Home = () => {
 
     useInjectReducer({ key, reducer });
     useInjectSaga({ key, saga });
-
     const dispatch = useDispatch();
-    const onLogin = (user) => dispatch(loginAction(user));
 
     return (
         <>
@@ -46,7 +44,7 @@ const Home = () => {
                                     username: 'test',
                                     password: 'test'
                                 }}
-                                onFinish={onLogin}
+                                onFinish={(user) => dispatch(loginAction(user))}
                             >
                                 <Form.Item
                                     label="Username"

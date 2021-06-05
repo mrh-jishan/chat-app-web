@@ -1,35 +1,28 @@
-/*
- *
- * LoginPage reducer
- *
- */
-
 import produce from 'immer';
-import { LOGIN_ERROR, LOGIN_REQUEST, LOGIN_SUCCESS } from './actions';
+import { REGISTER_ERROR, REGISTER_REQUEST, REGISTER_SUCCESS } from './actions';
 
 export const initialState = {
   body: {},
-  token: '',
+  message: '',
   isLoading: false,
-  isLogged: false,
   error: {},
   user: {}
 };
 
 const loginPageReducer = produce((draft, action) => {
   switch (action.type) {
-    case LOGIN_REQUEST:
-      draft.body = action.user;
+    case REGISTER_REQUEST:
+      draft.body = action.body;
       draft.isLoading = true;
       break;
-    case LOGIN_SUCCESS:
-      draft.token = action.token;
+    case REGISTER_SUCCESS:
+      draft.message = action.message;
       draft.user = action.user;
-      draft.isLogged = true;
       draft.isLoading = false;
       break;
-    case LOGIN_ERROR:
+    case REGISTER_ERROR:
       draft.body = action.error;
+      draft.message = action.message;
       draft.isLoading = false;
       break;
     default:

@@ -1,8 +1,11 @@
 import { Button, Col, Form, Input, Layout, Row, Typography } from 'antd';
-import axios from 'axios';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
-import { API_HOST } from '../../constant';
+import { useInjectReducer, useInjectSaga } from 'redux-injectors';
+import { registerAction } from './actions';
+import reducer from './reducer';
+import saga from './saga';
 
 const { Header, Content } = Layout;
 
@@ -14,19 +17,12 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
+const key = 'register';
+
 const Register = () => {
-
-    const onFinish = (user) => {
-        console.log('Success:', user);
-
-        axios.post(`${API_HOST}/signup`, { user })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            }).catch(err => {
-                console.log('err: ', err.response);
-            })
-    };
+    useInjectReducer({ key, reducer });
+    useInjectSaga({ key, saga });
+    const dispatch = useDispatch();
 
     return (
         <>
@@ -38,7 +34,7 @@ const Register = () => {
                     <Row align='middle'
                         justify='center'
                         style={{ minHeight: '300px' }}>
-                        <Col span={18}>
+                        <Col span={10}>
                             <Typography.Title>Welcome to Chat App</Typography.Title>
                             <Form
                                 {...layout}
@@ -49,7 +45,7 @@ const Register = () => {
                                     first_name: 'hi',
                                     last_name: 'there'
                                 }}
-                                onFinish={onFinish}
+                                onFinish={(user) => dispatch(registerAction(user))}
                             >
                                 <Form.Item
                                     label="First Name"

@@ -13,13 +13,19 @@ request.interceptors.request.use((config) => {
 export const onLogin = (user) => {
   return axios.post(`${API_HOST}/login`, { user })
     .then(res => res.data)
-    .catch(err => err.response)
+    .catch(err => err.response.data || err.response)
 };
+
+export const onRegister = (user) => {
+  return axios.post(`${API_HOST}/signup`, { user })
+    .then(res => res.data)
+    .catch(err => err.response.data || err.response)
+}
 
 export const onChatroom = (user) => {
   return request.get(`${API_HOST}/chatrooms`)
     .then(res => res.data)
-    .catch(err => err.response)
+    .catch(err => err.response.data || err.response)
 };
 
 export const onCreateChatroom = (topic) => {
