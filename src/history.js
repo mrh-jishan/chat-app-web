@@ -1,5 +1,5 @@
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 
-const history = createBrowserHistory({ basename: "/chat-app-web" });
+const history = createHashHistory({ hashType: "hashbang" });
 
 export default history;
