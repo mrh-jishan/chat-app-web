@@ -4,14 +4,11 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import './App.css';
 import configureStore from './configureStore';
 import history from './history';
-import { loadState } from './loadState';
 import Chat from "./pages/Chat";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 
-
-const initialState = loadState();
-const store = configureStore(initialState, history);
+const store = configureStore(history);
 
 function App() {
   return (
