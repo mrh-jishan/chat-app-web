@@ -13,7 +13,6 @@ import { makeSelectTopic } from './selectors';
 export function* chatroom() {
   try {
     const { data, success } = yield call(onChatroom);
-    console.log('res login: ', data);
     if (success) {
       yield put(chatroomSuccessAction(data.rooms));
     }

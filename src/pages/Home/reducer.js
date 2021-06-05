@@ -1,9 +1,3 @@
-/*
- *
- * LoginPage reducer
- *
- */
-
 import produce from 'immer';
 import { LOGIN_ERROR, LOGIN_REQUEST, LOGIN_SUCCESS } from './actions';
 

@@ -19,3 +19,20 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     />
   );
 }
+
+
+export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+  const { isLogged } = useSelector(stateSelector);
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isLogged ? (
+          <Redirect to='/chat' />
+        ) : (
+          <Component {...props} />
+        )
+      }
+    />
+  );
+}
