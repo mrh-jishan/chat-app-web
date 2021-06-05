@@ -1,9 +1,15 @@
 import actionCable from 'actioncable';
 import { Button, Comment, Form, Input, List } from 'antd';
-import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
-import { API_HOST, WS_HOST } from '../../constant';
+import { useInjectReducer, useInjectSaga } from 'redux-injectors';
+import { createStructuredSelector } from 'reselect';
+import { WS_HOST } from '../../constant';
+import { addNewMessageSocketAction, messageAction, newMessageAction } from './actions';
+import reducer from './reducer';
+import saga from './saga';
+import { makeSelectMessages } from './selectors';
 
 const { TextArea } = Input;
 
@@ -15,10 +21,21 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
+const key = 'messageList';
+
 const Message = () => {
+
+    useInjectReducer({ key, reducer });
+    useInjectSaga({ key, saga });
+
+    const dispatch = useDispatch();
+    const stateSelector = createStructuredSelector({
+        messages: makeSelectMessages(),
+    });
+    const { messages } = useSelector(stateSelector);
+
     const { slug } = useParams();
     const [form] = Form.useForm();
-    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         const cable = actionCable.createConsumer(WS_HOST);
@@ -34,39 +51,16 @@ const Message = () => {
             },
             received: data => {
                 console.log('socket data----------------', data);
-                setMessages(prevArray => [...prevArray, data.message])
+                // setMessages(prevArray => [...prevArray, data.message])
+                dispatch(addNewMessageSocketAction(data.message))
+
             }
         })
-    }, [slug])
+    }, [slug, dispatch])
 
     useEffect(() => {
-        axios.get(`${API_HOST}/chatrooms/${slug}/messages`)
-            .then(res => {
-                const { data } = res.data;
-                console.log('messages-------, ', data);
-                setMessages(data.messages)
-            }).catch(err => {
-                console.log('err: ', err.response);
-            })
-    }, [slug])
-
-    const onFinish = (values) => {
-        console.log('Success:', values);
-        axios.post(`${API_HOST}/chatrooms/${slug}/messages`, {
-            "message": {
-                "content": values.content,
-                "user_id": 2
-            }
-        })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-                form.resetFields();
-            }).catch(err => {
-                console.log('err: ', err.response);
-            })
-    };
-
+        dispatch(messageAction(slug));
+    }, [slug, dispatch])
 
     return (
         <div>
@@ -92,7 +86,7 @@ const Message = () => {
             <Form
                 {...layout}
                 name="basic"
-                onFinish={onFinish}
+                onFinish={(message) => { dispatch(newMessageAction(message.content)); form.resetFields(); }}
                 form={form}
             >
                 <Form.Item

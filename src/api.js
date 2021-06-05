@@ -27,3 +27,18 @@ export const onCreateChatroom = (topic) => {
     .then(res => res.data)
     .catch(err => err.response.data || err.response)
 }
+
+export const onLoadMessage = (slug) => {
+  return request.get(`${API_HOST}/chatrooms/${slug}/messages`)
+    .then(res => res.data)
+    .catch(err => err.response.data || err.response)
+}
+
+export const onCreateMessage = (slug, content) => {
+  return request.post(`${API_HOST}/chatrooms/${slug}/messages`,
+    {
+      message: { content }
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data || err.response)
+}
