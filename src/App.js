@@ -7,6 +7,7 @@ import history from './history';
 import Chat from "./pages/Chat";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import { PrivateRoute } from './pages/Route';
 
 const store = configureStore(history);
 
@@ -17,7 +18,7 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Home} />
           <Route exact path="/register" component={Register} />
-          <Route path="/chat" component={Chat} />
+          <PrivateRoute path="/chat" component={Chat} />
           <Redirect to='/login' from='/' />
           <Route path='*' exact={true} component={Home} />
         </Switch>

@@ -1,11 +1,12 @@
 import { Button, Card, Col, Form, Layout, Row, Typography } from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link, Switch, useRouteMatch } from "react-router-dom";
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
 import { createStructuredSelector } from 'reselect';
 import Topic from '../../components/Topic';
 import Message from '../Message';
+import { PrivateRoute } from '../Route';
 import { chatroomAction, chatroomCreateAction, closeModalAction, opneModalAction } from './actions';
 import reducer from './reducer';
 import saga from './saga';
@@ -79,8 +80,8 @@ const Chat = () => {
                                 <Col span={14}>
                                     <Card>
                                         <Switch>
-                                            <Route exact path={path} component={() => <h3>Please select a chat topic.</h3>} />
-                                            <Route path={`${path}/:slug`} component={Message} />
+                                            <PrivateRoute exact path={path} component={() => <h3>Please select a chat topic.</h3>} />
+                                            <PrivateRoute path={`${path}/:slug`} component={Message} />
                                         </Switch>
                                     </Card>
                                 </Col>
