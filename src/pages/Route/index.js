@@ -3,7 +3,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
-import { makeSelectIsLogged } from '../Home/selectors';
+import { makeSelectIsLogged } from '../Startup/selectors';
+
 
 const { Header, Footer } = Layout;
 

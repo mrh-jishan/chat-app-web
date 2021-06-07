@@ -22,7 +22,13 @@ export const onRegister = (user) => {
     .catch(err => err.response.data || err.response)
 }
 
-export const onChatroom = (user) => {
+export const onGetUser = () => {
+  return request.get(`${API_HOST}/user`)
+    .then(res => res.data)
+    .catch(err => err.response.data || err.response)
+};
+
+export const onChatroom = () => {
   return request.get(`${API_HOST}/chatrooms`)
     .then(res => res.data)
     .catch(err => err.response.data || err.response)

@@ -1,8 +1,8 @@
 import { notification } from 'antd';
-import { push } from 'connected-react-router';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { onLogin } from '../../api';
-import { loginSuccessAction, LOGIN_REQUEST } from './actions';
+import { checkLoginSuccessAction } from '../Startup/actions';
+import { loginErrorAction, loginSuccessAction, LOGIN_REQUEST } from './actions';
 import { makeSelectBody } from './selectors';
 
 export function* login() {
@@ -11,13 +11,14 @@ export function* login() {
     const { data, success, message } = yield call(onLogin, user);
     if (success) {
       localStorage.setItem('token', data.token);
-      yield put(loginSuccessAction(data.user, data.token));
+      yield put(loginSuccessAction());
+      yield put(checkLoginSuccessAction(data.user, data.token));
       notification.info({
         description: message,
         placement: 'bottomRight',
       });
-      yield put(push('/chat'));
     } else {
+      yield put(loginErrorAction({}));
       notification.error({
         description: message,
         placement: 'bottomRight',
@@ -25,6 +26,7 @@ export function* login() {
     }
   } catch (err) {
     console.log("Error => ", err);
+    yield put(loginErrorAction(err));
     notification.info({
       description: err,
       placement: 'bottomRight',

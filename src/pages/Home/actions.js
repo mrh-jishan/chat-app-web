@@ -10,11 +10,9 @@ export function loginAction(user) {
   };
 }
 
-export function loginSuccessAction(user, token) {
+export function loginSuccessAction() {
   return {
-    type: LOGIN_SUCCESS,
-    user,
-    token,
+    type: LOGIN_SUCCESS
   };
 }
 
