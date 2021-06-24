@@ -39,7 +39,7 @@ const Message = () => {
 
     useEffect(() => {
         const cable = actionCable.createConsumer(WS_HOST);
-        cable.subscriptions.create({
+        const cableRef = cable.subscriptions.create({
             channel: `MessagesChannel`,
             chatroom_slug: `messages_${slug}`
         }, {
@@ -50,12 +50,12 @@ const Message = () => {
                 console.log('disconnected');
             },
             received: data => {
-                console.log('socket data----------------', data);
-                // setMessages(prevArray => [...prevArray, data.message])
                 dispatch(addNewMessageSocketAction(data.message))
-
             }
         })
+        return () => {
+            cableRef.consumer.disconnect();
+        };
     }, [slug, dispatch])
 
     useEffect(() => {
