@@ -44,14 +44,12 @@ const chatPageReducer = produce((draft, action) => {
       draft.topic = action.topic
       break;
     case CHAT_CREATE_SUCCESS:
-      console.log('action: ', action);
-      draft.rooms.push(action.chatroom);
+      draft.rooms.splice(0, 0, action.chatroom);
       draft.message = action.message;
       draft.isLoading = false;
       draft.modalOpen = false;
       break;
     case CHAT_CREATE_ERROR:
-      console.log('action: ', action);
       draft.error = action.error;
       draft.message = action.message;
       draft.isLoading = true;

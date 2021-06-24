@@ -1,5 +1,5 @@
-import { Button, Card, Col, Form, Layout, Row, Typography } from 'antd';
-import React, { useEffect } from 'react';
+import { Button, Card, Col, Form, Layout, Menu, Row, Typography } from 'antd';
+import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
@@ -11,7 +11,7 @@ import reducer from './reducer';
 import saga from './saga';
 import { makeSelectModalOpen, makeSelectRooms } from './selectors';
 
-const { Content } = Layout;
+const { Content, Sider } = Layout;
 
 const key = 'chatroom';
 
@@ -35,57 +35,70 @@ const Chat = () => {
 
     return (
         <>
-
             <Content style={{ padding: '0 50px', marginTop: 64 }}>
-                <Row align='middle' justify='center' style={{ minHeight: '300px' }}>
-                    <Col span={24}>
-                        <Typography.Title>Welcome to Chat App</Typography.Title>
-                        <Row
-                            gutter={[16, 16]}
-                            align='middle'
-                            justify='center'>
-
+                <Layout>
+                    <Sider style={{
+                        overflow: 'auto',
+                        height: 'calc(100vh - 60px)',
+                        position: 'fixed',
+                        left: 0,
+                        top: 60
+                    }}
+                    >
+                        <Menu theme="dark" mode="inline" >
+                            {rooms.map((room, index) => (
+                                <Fragment key={index}>
+                                    <Menu.Divider type="horizontal" />
+                                    <Menu.Item key={index} >
+                                        <Link to={`${url}/${room.slug}`}>{room.topic}</Link>
+                                    </Menu.Item>
+                                </Fragment>
+                            ))}
+                        </Menu>
+                    </Sider>
+                    <Layout className="site-layout" style={{ marginLeft: 200, marginTop: 60 }}>
+                        <Row align='middle' justify='center' style={{ minHeight: '300px' }}>
                             <Col span={24}>
-                                <h2>Chat Topic</h2>
-                                <Button
-                                    type="primary"
-                                    onClick={() => dispatch(opneModalAction())}>
-                                    Create Topic
-                                    </Button>
+                                <Row
+                                    gutter={[16, 16]}
+                                    align='middle'
+                                    justify='space-between'>
+                                    <Col>
+                                        <Typography.Title>Welcome to Chat App</Typography.Title>
+                                    </Col>
+                                    <Col>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => dispatch(opneModalAction())}>
+                                            Create Topic
+                                        </Button>
+                                    </Col>
+                                </Row>
+
                                 <Topic
                                     form={form}
                                     isModalVisible={isModalVisible}
                                     handleOk={(topic) => dispatch(chatroomCreateAction(topic))}
                                     handleCancel={() => dispatch(closeModalAction())} />
                             </Col>
-                            <Col span={10}>
-                                <Card>
-                                    <ul>
-                                        {rooms.length <= 0 && (
-                                            <h3> No topic found </h3>
-                                        )}
-                                        {rooms.map((room, index) => (
-                                            <li key={index}>
-                                                <Link to={`${url}/${room.slug}`}>{room.topic}</Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </Card>
-                            </Col>
 
-                            <Col span={14}>
+                            <Col span={24}>
                                 <Card>
-                                    <Switch>
-                                        <Route exact path={path} component={() => <h3>Please select a chat topic.</h3>} />
-                                        <Route path={`${path}/:slug`} component={Message} />
-                                    </Switch>
+                                    {rooms.length <= 0 ? (
+                                        <h3> No topic found </h3>
+                                    ) : (
+                                        <Switch>
+                                            <Route exact path={path} component={() => <h3>Please select a chat topic.</h3>} />
+                                            <Route path={`${path}/:slug`} component={Message} />
+                                        </Switch>
+                                    )}
+
                                 </Card>
                             </Col>
-                        </Row>,
-                        </Col>
-                </Row>
+                        </Row>
+                    </Layout>
+                </Layout>
             </Content>
-            <Link to="/">Go Back</Link>
         </>
     )
 }

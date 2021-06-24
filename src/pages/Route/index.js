@@ -21,7 +21,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
         isLogged ? (
           <>
             <Layout>
-              <Header>
+              <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
                 <Row justify="space-between">
                   <Col span={10}>
                     <div className="logo" />
