@@ -1,6 +1,6 @@
 import actionCable from 'actioncable';
 import { Button, Comment, Form, Input, List } from 'antd';
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
@@ -17,9 +17,6 @@ const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
 };
-const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-};
 
 const key = 'messageList';
 
@@ -34,6 +31,7 @@ const Message = () => {
     });
     const { messages } = useSelector(stateSelector);
 
+    const el = useRef(null);
     const { slug } = useParams();
     const [form] = Form.useForm();
 
@@ -50,7 +48,9 @@ const Message = () => {
                 console.log('disconnected');
             },
             received: data => {
-                dispatch(addNewMessageSocketAction(data.message))
+                dispatch(addNewMessageSocketAction(data.message));
+                console.log('inputEl: ', el);
+                el.current.scrollIntoView()
             }
         })
         return () => {
@@ -60,26 +60,31 @@ const Message = () => {
 
     useEffect(() => {
         dispatch(messageAction(slug));
+        setTimeout(() => el.current.scrollIntoView(), 500)
     }, [slug, dispatch])
 
+
     return (
-        <div>
+        <>
             <h3>Chat Room: {slug}</h3>
             <List
                 className="comment-list"
+                style={{
+                    height: 380,
+                    overflow: 'auto'
+                }}
                 header={`${messages.length} replies`}
-                itemLayout="horizontal"
                 dataSource={messages}
+                bordered={true}
+                footer={<div ref={el} />}
                 renderItem={item => (
-                    <li>
-                        <Comment
-                            actions={item.actions}
-                            author={item.user.username}
-                            avatar='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                            content={item.content}
-                            datetime={item.created_at}
-                        />
-                    </li>
+                    <Comment
+                        actions={item.actions}
+                        author={item.user.username}
+                        avatar='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                        content={item.content}
+                        datetime={item.created_at}
+                    />
                 )}
             />
 
@@ -90,6 +95,7 @@ const Message = () => {
                 form={form}
             >
                 <Form.Item
+                    wrapperCol={{ span: 24 }}
                     name="content"
                     rules={[
                         {
@@ -98,14 +104,15 @@ const Message = () => {
                         },
                     ]}
                 >
-                    <TextArea rows={4} />
+                    <TextArea rows={2} placeholder='Message...' />
                 </Form.Item>
 
-                <Form.Item {...tailLayout}>
+                <Form.Item
+                    wrapperCol={{ span: 24 }} style={{ textAlign: 'right' }}>
                     <Button type="primary" htmlType="submit"> Submit </Button>
                 </Form.Item>
             </Form>
-        </div >
+        </>
     );
 }
 

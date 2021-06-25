@@ -56,8 +56,8 @@ const Chat = () => {
                             ))}
                         </Menu>
                     </Sider>
-                    <Layout className="site-layout" style={{ marginLeft: 200, marginTop: 60 }}>
-                        <Row align='middle' justify='center' style={{ minHeight: '300px' }}>
+                    <Layout className="site-layout" style={{ marginLeft: 200, marginTop: 20 }}>
+                        <Row align='middle' justify='center' style={{ minHeight: '250px' }}>
                             <Col span={24}>
                                 <Row
                                     gutter={[16, 16]}
