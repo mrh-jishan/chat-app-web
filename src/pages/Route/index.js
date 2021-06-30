@@ -1,8 +1,9 @@
 import { Col, Layout, Menu, Row } from 'antd';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
+import { logoutAction } from '../Startup/actions';
 import { makeSelectIsLogged } from '../Startup/selectors';
 
 
@@ -14,6 +15,11 @@ const stateSelector = createStructuredSelector({
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { isLogged } = useSelector(stateSelector);
+  const dispatch = useDispatch();
+
+  const onLogout = (e) => {
+    dispatch(logoutAction())
+  }
   return (
     <Route
       {...rest}
@@ -36,7 +42,8 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
                     <Row justify="end">
                       <Col>
                         <Menu theme="dark"
-                          mode="horizontal">
+                          mode="horizontal"
+                          onClick={onLogout}>
                           <Menu.Item key="3">Profile</Menu.Item>
                           <Menu.Item key="4">Logout</Menu.Item>
                         </Menu>

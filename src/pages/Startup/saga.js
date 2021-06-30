@@ -1,6 +1,6 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { onGetUser } from '../../api';
-import { checkLoginErrorAction, checkLoginSuccessAction, CHECK_LOGIN_REQUEST } from './actions';
+import { checkLoginErrorAction, checkLoginSuccessAction, CHECK_LOGIN_REQUEST, LOGOUT_REQUEST } from './actions';
 import { makeSelectToken } from './selectors';
 
 
@@ -19,6 +19,11 @@ export function* checkLogin() {
   }
 }
 
+export function checkLogout() {
+ localStorage.clear();
+}
+
 export default function* loginPageSaga() {
   yield takeLatest(CHECK_LOGIN_REQUEST, checkLogin);
+  yield takeLatest(LOGOUT_REQUEST, checkLogout);
 }

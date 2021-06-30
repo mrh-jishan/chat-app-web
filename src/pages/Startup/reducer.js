@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { CHECK_LOGIN_ERROR, CHECK_LOGIN_REQUEST, CHECK_LOGIN_SUCCESS } from './actions';
+import { CHECK_LOGIN_ERROR, CHECK_LOGIN_REQUEST, CHECK_LOGIN_SUCCESS, LOGOUT_REQUEST } from './actions';
 
 export const initialState = {
   token: '',
@@ -24,6 +24,9 @@ const checkLoginPageReducer = produce((draft, action) => {
     case CHECK_LOGIN_ERROR:
       draft.body = action.error;
       draft.isLoading = false;
+      break;
+    case LOGOUT_REQUEST:
+      draft.isLogged = false;
       break;
     default:
       return draft;
