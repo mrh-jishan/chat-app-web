@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { makeSelectIsLogged } from '../Startup/selectors';
 
 
-const { Header, Footer } = Layout;
+const { Header, Footer, Content } = Layout;
 
 const stateSelector = createStructuredSelector({
   isLogged: makeSelectIsLogged(),
@@ -45,8 +45,14 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
                   </Col>
                 </Row>
               </Header>
-              <Component {...props} />
-              <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+              <Content style={{
+                padding: '0 50px',
+                marginTop: 64,
+                minHeight: 'calc(100vh - 120px)'
+              }}>
+                <Component {...props} />
+              </Content>
+              <Footer style={{ textAlign: 'center' }}>ChatApp ©2021 Created by Robiul Hassan</Footer>
             </Layout>
           </>
         ) : <Redirect to='/login' />
@@ -71,7 +77,7 @@ export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
                   <div className="logo" />
                 </Header>
                 <Component {...props} />
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <Footer style={{ textAlign: 'center' }}>ChatApp ©2021 Created by Robiul Hassan</Footer>
               </Layout>
             </>
           )

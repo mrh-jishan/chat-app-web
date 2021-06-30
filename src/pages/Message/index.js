@@ -50,7 +50,7 @@ const Message = () => {
             received: data => {
                 dispatch(addNewMessageSocketAction(data.message));
                 console.log('inputEl: ', el);
-                el.current.scrollIntoView()
+                el.current?.scrollIntoView()
             }
         })
         return () => {
@@ -67,15 +67,12 @@ const Message = () => {
     return (
         <>
             <h3>Chat Room: {slug}</h3>
-            <List
-                className="comment-list"
-                style={{
-                    height: 380,
-                    overflow: 'auto'
-                }}
+            <List style={{
+                height: 'calc(100vh - 400px)',
+                overflow: 'auto'
+            }}
                 header={`${messages.length} replies`}
                 dataSource={messages}
-                bordered={true}
                 footer={<div ref={el} />}
                 renderItem={item => (
                     <Comment

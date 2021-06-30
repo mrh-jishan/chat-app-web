@@ -1,5 +1,5 @@
-import { Button, Card, Col, Form, Layout, Menu, Row, Typography } from 'antd';
-import React, { Fragment, useEffect } from 'react';
+import { Avatar, Button, Card, Col, Form, Layout, List, Row } from 'antd';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
@@ -10,8 +10,6 @@ import { chatroomAction, chatroomCreateAction, closeModalAction, opneModalAction
 import reducer from './reducer';
 import saga from './saga';
 import { makeSelectModalOpen, makeSelectRooms } from './selectors';
-
-const { Content, Sider } = Layout;
 
 const key = 'chatroom';
 
@@ -35,54 +33,62 @@ const Chat = () => {
 
     return (
         <>
-            <Content style={{ padding: '0 50px', marginTop: 64 }}>
-                <Layout>
-                    <Sider style={{
-                        overflow: 'auto',
-                        height: 'calc(100vh - 60px)',
-                        position: 'fixed',
-                        left: 0,
-                        top: 60
-                    }}
-                    >
-                        <Menu theme="dark" mode="inline" >
-                            {rooms.map((room, index) => (
-                                <Fragment key={index}>
-                                    <Menu.Divider type="horizontal" />
-                                    <Menu.Item key={index} >
-                                        <Link to={`${url}/${room.slug}`}>{room.topic}</Link>
-                                    </Menu.Item>
-                                </Fragment>
-                            ))}
-                        </Menu>
-                    </Sider>
-                    <Layout className="site-layout" style={{ marginLeft: 200, marginTop: 20 }}>
-                        <Row align='middle' justify='center' style={{ minHeight: '250px' }}>
-                            <Col span={24}>
-                                <Row
-                                    gutter={[16, 16]}
-                                    align='middle'
-                                    justify='space-between'>
-                                    <Col>
-                                        <Typography.Title>Welcome to Chat App</Typography.Title>
-                                    </Col>
-                                    <Col>
-                                        <Button
-                                            type="primary"
-                                            onClick={() => dispatch(opneModalAction())}>
-                                            Create Topic
-                                        </Button>
-                                    </Col>
-                                </Row>
+            <Layout style={{ marginTop: 20 }}>
+                <Row gutter={[16, 16]}
+                    justify='center'
+                    style={{ height: '250px' }}>
 
-                                <Topic
-                                    form={form}
-                                    isModalVisible={isModalVisible}
-                                    handleOk={(topic) => dispatch(chatroomCreateAction(topic))}
-                                    handleCancel={() => dispatch(closeModalAction())} />
+                    <Col span={24}>
+                        <Row gutter={[16, 16]}
+                            align='middle'
+                            justify='end'>
+                            {/* <Col>
+                                    <Typography.Title >Welcome to Chat App</Typography.Title>
+                                </Col> */}
+                            <Col>
+                                <Button
+                                    type="primary"
+                                    onClick={() => dispatch(opneModalAction())}>
+                                    Create Topic
+                                </Button>
+                            </Col>
+                        </Row>
+
+                        <Topic
+                            form={form}
+                            isModalVisible={isModalVisible}
+                            handleOk={(topic) => dispatch(chatroomCreateAction(topic))}
+                            handleCancel={() => dispatch(closeModalAction())} />
+                    </Col>
+
+                    <Col span={24}>
+                        <Row gutter={[16, 16]}
+                            align='stretch'
+                            justify='center'>
+                            <Col span={8}>
+                                <Card>
+                                    <h3>Select Chat Room</h3>
+                                    <List header={`${rooms.length} chat rooms`}
+                                        size="small"
+                                        itemLayout="horizontal"
+                                        dataSource={rooms}
+                                        style={{
+                                            height: 'calc(100vh - 270px)',
+                                            overflowY: 'scroll'
+                                        }}
+                                        renderItem={room => (
+                                            <List.Item>
+                                                <List.Item.Meta
+                                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                                    title={<Link to={`${url}/${room.slug}`}>{room.topic}</Link>}
+                                                />
+                                            </List.Item>
+                                        )}
+                                    />
+                                </Card>
                             </Col>
 
-                            <Col span={24}>
+                            <Col flex="auto">
                                 <Card>
                                     {rooms.length <= 0 ? (
                                         <h3> No topic found </h3>
@@ -96,9 +102,10 @@ const Chat = () => {
                                 </Card>
                             </Col>
                         </Row>
-                    </Layout>
-                </Layout>
-            </Content>
+
+                    </Col>
+                </Row>
+            </Layout>
         </>
     )
 }
