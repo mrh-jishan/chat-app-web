@@ -1,11 +1,11 @@
 import { Col, Layout, Menu, Row } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
 import { Redirect, Route } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { logoutAction } from '../Startup/actions';
 import { makeSelectIsLogged } from '../Startup/selectors';
-
 
 const { Header, Footer, Content } = Layout;
 
@@ -17,9 +17,17 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { isLogged } = useSelector(stateSelector);
   const dispatch = useDispatch();
 
+  const isMobile = useMediaQuery({ maxWidth: 767 })
+
   const onLogout = (e) => {
     dispatch(logoutAction())
   }
+
+
+  useEffect(() => {
+    console.log('ismpb', isMobile);
+  }, [isMobile])
+
   return (
     <Route
       {...rest}
@@ -32,10 +40,9 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
                   <Col span={10}>
                     <div className="logo" />
                     <Menu theme="dark"
-                      mode="horizontal"
-                      defaultSelectedKeys={['0']}>
+                      mode="horizontal">
                       <Menu.Item key="1">Home</Menu.Item>
-                      <Menu.Item key="2">Feeds</Menu.Item>
+                      {/* <Menu.Item key="2">Feeds</Menu.Item> */}
                     </Menu>
                   </Col>
                   <Col span={8}>
@@ -53,7 +60,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
                 </Row>
               </Header>
               <Content style={{
-                padding: '0 50px',
+                padding: isMobile?  '0 5px': '0 50px',
                 marginTop: 64,
                 minHeight: 'calc(100vh - 120px)'
               }}>

@@ -1,5 +1,5 @@
 import actionCable from 'actioncable';
-import { Button, Comment, Form, Input, List } from 'antd';
+import { Button, Card, Comment, Form, Input, List } from 'antd';
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
@@ -73,15 +73,18 @@ const Message = () => {
             }}
                 header={`${messages.length} replies`}
                 dataSource={messages}
+                bordered
                 footer={<div ref={el} />}
                 renderItem={item => (
-                    <Comment
-                        actions={item.actions}
-                        author={item.user.username}
-                        avatar='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                        content={item.content}
-                        datetime={item.created_at}
-                    />
+                    <Card bodyStyle={{ padding: '0 10px' }}>
+                        <Comment
+                            actions={item.actions}
+                            author={item.user.username}
+                            avatar='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                            content={item.content}
+                            datetime={item.created_at}
+                        />
+                    </Card>
                 )}
             />
 

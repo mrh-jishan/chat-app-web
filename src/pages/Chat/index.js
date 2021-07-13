@@ -1,9 +1,12 @@
-import { Avatar, Button, Card, Col, Form, Layout, List, Row } from 'antd';
-import React, { useEffect } from 'react';
+import { Button, Card, Col, Form, Layout, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { useInjectReducer, useInjectSaga } from 'redux-injectors';
 import { createStructuredSelector } from 'reselect';
+import ChatRoom from '../../components/ChatRoom';
+import RightButton from '../../components/RightButton';
 import Topic from '../../components/Topic';
 import Message from '../Message';
 import { chatroomAction, chatroomCreateAction, closeModalAction, opneModalAction } from './actions';
@@ -18,6 +21,9 @@ const Chat = () => {
     useInjectReducer({ key, reducer });
     useInjectSaga({ key, saga });
 
+    const isMobile = useMediaQuery({ maxWidth: 767 })
+    const [isOpen, setIsOpen] = useState(false);
+
     const dispatch = useDispatch();
     const stateSelector = createStructuredSelector({
         rooms: makeSelectRooms(),
@@ -31,6 +37,10 @@ const Chat = () => {
         dispatch(chatroomAction());
     }, [dispatch])
 
+    const toggleMenu = () => {
+        if (isMobile) { setIsOpen(!isOpen) }
+    }
+
     return (
         <>
             <Layout style={{ marginTop: 20 }}>
@@ -42,9 +52,6 @@ const Chat = () => {
                         <Row gutter={[16, 16]}
                             align='middle'
                             justify='end'>
-                            {/* <Col>
-                                    <Typography.Title >Welcome to Chat App</Typography.Title>
-                                </Col> */}
                             <Col>
                                 <Button
                                     type="primary"
@@ -65,28 +72,30 @@ const Chat = () => {
                         <Row gutter={[16, 16]}
                             align='stretch'
                             justify='center'>
-                            <Col span={8}>
-                                <Card>
-                                    <h3>Select Chat Room</h3>
-                                    <List header={`${rooms.length} chat rooms`}
-                                        size="small"
-                                        itemLayout="horizontal"
-                                        dataSource={rooms}
-                                        style={{
-                                            height: 'calc(100vh - 270px)',
-                                            overflowY: 'scroll'
-                                        }}
-                                        renderItem={room => (
-                                            <List.Item>
-                                                <List.Item.Meta
-                                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                                    title={<Link to={`${url}/${room.slug}`}>{room.topic}</Link>}
-                                                />
-                                            </List.Item>
-                                        )}
-                                    />
-                                </Card>
-                            </Col>
+
+                            {isMobile && (
+                                <RightButton isOpen={isOpen} toggleMenu={toggleMenu} />
+                            )}
+
+                            {isOpen && isMobile && (
+                                <Col style={{
+                                    position: 'fixed',
+                                    zIndex: 1,
+                                    top: 64,
+                                    width: '100%'
+                                }}>
+                                    <ChatRoom toggleMenu={toggleMenu} rooms={rooms} url={url} />
+                                </Col>
+                            )}
+
+                            {!isMobile && (
+                                <Col style={{
+                                    width: '35%'
+                                }}>
+                                    <ChatRoom toggleMenu={toggleMenu} rooms={rooms} url={url} />
+                                </Col>
+
+                            )}
 
                             <Col flex="auto">
                                 <Card>
@@ -94,7 +103,14 @@ const Chat = () => {
                                         <h3> No topic found </h3>
                                     ) : (
                                         <Switch>
-                                            <Route exact path={path} component={() => <h3>Please select a chat topic.</h3>} />
+                                            <Route exact path={path} component={() => (
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <h3>Please select a chat topic...</h3>
+                                                    {isMobile && (
+                                                        <Button type='primary' onClick={toggleMenu}>Open Chat Room</Button>
+                                                    )}
+                                                </div>
+                                            )} />
                                             <Route path={`${path}/:slug`} component={Message} />
                                         </Switch>
                                     )}
