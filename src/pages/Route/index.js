@@ -60,7 +60,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
                 </Row>
               </Header>
               <Content style={{
-                padding: isMobile?  '0 5px': '0 50px',
+                padding: isMobile?  '0 15px': '0 50px',
                 marginTop: 64,
                 minHeight: 'calc(100vh - 120px)'
               }}>

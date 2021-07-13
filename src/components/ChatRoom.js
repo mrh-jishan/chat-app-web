@@ -3,7 +3,12 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 
-const ChatRoom = ({ toggleMenu, rooms, url }) => {
+const ChatRoom = ({ toggleMenu, rooms, url , isMobile}) => {
+
+    const getHeight = ()=> {
+        return isMobile ? 'calc(100vh - 210px)': 'calc(100vh - 270px)'
+    }
+
     return (
         <>
             <Card>
@@ -13,7 +18,7 @@ const ChatRoom = ({ toggleMenu, rooms, url }) => {
                     itemLayout="horizontal"
                     dataSource={rooms}
                     style={{
-                        height: 'calc(100vh - 270px)',
+                        height: getHeight(),
                         overflowY: 'scroll'
                     }}
                     bordered

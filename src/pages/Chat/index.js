@@ -84,7 +84,7 @@ const Chat = () => {
                                     top: 64,
                                     width: '100%'
                                 }}>
-                                    <ChatRoom toggleMenu={toggleMenu} rooms={rooms} url={url} />
+                                    <ChatRoom toggleMenu={toggleMenu} rooms={rooms} url={url} isMobile={isMobile}/>
                                 </Col>
                             )}
 
@@ -92,7 +92,7 @@ const Chat = () => {
                                 <Col style={{
                                     width: '35%'
                                 }}>
-                                    <ChatRoom toggleMenu={toggleMenu} rooms={rooms} url={url} />
+                                    <ChatRoom toggleMenu={toggleMenu} rooms={rooms} url={url} isMobile={isMobile}/>
                                 </Col>
 
                             )}
